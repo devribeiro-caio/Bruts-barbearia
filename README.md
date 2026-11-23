@@ -35,7 +35,7 @@ Os quatro serviços criados automaticamente em uma base vazia usam preços demon
    node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
    ```
 
-3. Em `WHATSAPP_PHONE`, informe somente os dígitos do telefone em formato internacional, incluindo o código do país e da cidade. Enquanto estiver vazio, o site não exibe um link quebrado.
+3. Em `WHATSAPP_PHONE`, informe somente os dígitos do telefone em formato internacional, incluindo o código do país e da cidade. Enquanto estiver vazio, o site não exibe um link quebrado. Para lembretes automáticos, configure também a conta oficial da WhatsApp Cloud API e as variáveis `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_REMINDER_TEMPLATE_24H` e `WHATSAPP_REMINDER_TEMPLATE_2H`.
 
 4. Configure no MongoDB Atlas um usuário de banco e uma entrada de rede para permitir a conexão do ambiente onde o aplicativo está sendo executado. Restrinja a lista de acesso ao menor conjunto de endereços possível. O URI fica somente no `.env`, que está ignorado pelo Git.
 
@@ -67,6 +67,13 @@ Não use `0.0.0.0/0` na lista de acesso do Atlas como padrão: esse intervalo pe
 | `ADMIN_PASSWORD` | Senha forte usada no provisionamento inicial; o aplicativo salva somente o hash. |
 | `JWT_SECRET` | Segredo da sessão assinada; gerado pelo Render no deploy do Blueprint. |
 | `WHATSAPP_PHONE` | Telefone internacional somente com dígitos; o número pode aparecer no link público. |
+| `WHATSAPP_ACCESS_TOKEN` | Token privado da WhatsApp Cloud API; nunca coloque no frontend ou no Git. |
+| `WHATSAPP_PHONE_NUMBER_ID` | ID do número oficial usado pela Cloud API para enviar mensagens. |
+| `WHATSAPP_API_VERSION` | Versão da Graph API; padrão `v23.0`. |
+| `WHATSAPP_REMINDER_TEMPLATE_24H` | Nome do template Utility aprovado para o lembrete de 24 horas. |
+| `WHATSAPP_REMINDER_TEMPLATE_2H` | Nome do template Utility aprovado para o lembrete de 2 horas. |
+| `WHATSAPP_TEMPLATE_LANGUAGE` | Idioma aprovado dos templates; padrão `pt_BR`. |
+| `REMINDER_LOOKBACK_MINUTES` | Janela de tolerância do cron; padrão 20 minutos. |
 | `SHOP_TIMEZONE` | Fuso das datas da barbearia; padrão `America/Sao_Paulo`. |
 | `PORT` | Porta do Express; o Render fornece o valor de produção. |
 
@@ -84,6 +91,7 @@ Não há envio de e-mail ou cobrança automática nesta versão. O cliente acomp
 - `npm run build` — compila o frontend React.
 - `npm start` — inicia o serviço Express para produção.
 - `npm run lint` — verifica JavaScript e JSX com ESLint.
+- `npm run job:whatsapp-reminders` — consulta agendamentos confirmados e envia lembretes autorizados via WhatsApp.
 
 ## Referências oficiais
 

@@ -10,8 +10,14 @@ const durationMinutes = z.number().int().min(30).max(240).refine((value) => valu
 export const registerSchema = z.object({
   name: z.string().trim().min(2, 'Informe seu nome.').max(80),
   email: z.string().trim().email('Informe um e-mail válido.').max(254),
+  whatsappPhone: z.string().trim().max(20).optional().default(''),
+  whatsappOptIn: z.boolean().optional().default(false),
   password: z.string().min(8, 'A senha deve ter pelo menos 8 caracteres.').max(72)
     .refine((value) => Buffer.byteLength(value, 'utf8') <= 72, 'A senha é muito longa.'),
+}).superRefine((value, context) => {
+  if (value.whatsappOptIn && value.whatsappPhone.replace(/\D/g, '').length < 10) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['whatsappPhone'], message: 'Informe um WhatsApp válido para receber lembretes.' });
+  }
 });
 
 export const loginSchema = z.object({

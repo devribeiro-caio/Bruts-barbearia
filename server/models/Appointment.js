@@ -11,6 +11,8 @@ const appointmentSchema = new mongoose.Schema({
   slotStarts: [{ type: Date, required: true }],
   occupiesSlot: { type: Boolean, default: true, required: true },
   status: { type: String, enum: ['pending', 'confirmed', 'rejected'], default: 'pending', required: true },
+  reminder24hSentAt: { type: Date, default: null },
+  reminder2hSentAt: { type: Date, default: null },
   customerNotes: { type: String, trim: true, maxlength: 500, default: '' },
   adminNotes: { type: String, trim: true, maxlength: 500, default: '' },
 }, { timestamps: true });
