@@ -2,6 +2,7 @@ services:
   - type: web
     name: brutus-cortes
     runtime: node
+    plan: free
     region: virginia
     buildCommand: npm ci && npm run build
     startCommand: npm start
