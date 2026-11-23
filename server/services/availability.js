@@ -5,6 +5,12 @@ import { env } from '../config/env.js';
 import { HttpError } from '../utils/errors.js';
 import { localDateTime, parseMonth } from '../utils/date-time.js';
 
+const minimumAppointmentGapMinutes = 90;
+
+function reservationMinutes(durationMinutes) {
+  return Math.max(Number(durationMinutes) || 0, minimumAppointmentGapMinutes);
+}
+
 export async function getMonthlyAvailability(service, monthValue) {
   const month = parseMonth(monthValue);
   const endOfMonth = month.plus({ months: 1 });
@@ -16,13 +22,21 @@ export async function getMonthlyAvailability(service, monthValue) {
         $gte: month.toUTC().toJSDate(),
         $lt: endOfMonth.toUTC().toJSDate(),
       },
-    }).select('slotStarts').lean(),
+    }).select('slotStarts startAt durationMinutes').lean(),
   ]);
 
   const hoursByDay = new Map(hoursRows.map((row) => [row.dayOfWeek, row]));
-  const busySlots = new Set(appointmentRows.flatMap((row) => row.slotStarts).map((slot) => new Date(slot).getTime()));
+  const busySlots = new Set();
+  appointmentRows.forEach((row) => {
+    const startsAt = DateTime.fromJSDate(new Date(row.startAt)).setZone(env.timezone);
+    for (let offset = 0; offset < reservationMinutes(row.durationMinutes); offset += 30) {
+      busySlots.add(startsAt.plus({ minutes: offset }).toUTC().toMillis());
+    }
+    (row.slotStarts || []).forEach((slot) => busySlots.add(new Date(slot).getTime()));
+  });
   const now = DateTime.now().setZone(env.timezone);
   const duration = service.durationMinutes;
+  const reservationDuration = reservationMinutes(duration);
   const numberOfDays = month.daysInMonth;
   const days = [];
 
@@ -36,10 +50,10 @@ export async function getMonthlyAvailability(service, monthValue) {
       const opensAt = localDateTime(date, schedule.openTime);
       const closesAt = localDateTime(date, schedule.closeTime);
 
-      for (let start = opensAt; start.plus({ minutes: duration }) <= closesAt; start = start.plus({ minutes: 30 })) {
+      for (let start = opensAt; start.plus({ minutes: reservationDuration }) <= closesAt; start = start.plus({ minutes: 30 })) {
         if (start <= now) continue;
         const slotStarts = [];
-        for (let offset = 0; offset < duration; offset += 30) {
+        for (let offset = 0; offset < reservationDuration; offset += 30) {
           slotStarts.push(start.plus({ minutes: offset }).toUTC().toMillis());
         }
         if (slotStarts.some((slot) => busySlots.has(slot))) continue;
@@ -67,7 +81,7 @@ export async function assertAvailableSlot(service, date, time) {
   }
 
   const slotStarts = [];
-  for (let offset = 0; offset < service.durationMinutes; offset += 30) {
+  for (let offset = 0; offset < reservationMinutes(service.durationMinutes); offset += 30) {
     slotStarts.push(requestedStart.plus({ minutes: offset }).toUTC().toJSDate());
   }
   return {
