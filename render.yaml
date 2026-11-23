@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: brutus-cortes
+    runtime: node
+    region: virginia
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SHOP_TIMEZONE
+        value: America/Sao_Paulo
+      - key: MONGODB_URI
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: WHATSAPP_PHONE
+        sync: false

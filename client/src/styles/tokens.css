@@ -1,0 +1,18 @@
+:root {
+  font-family: 'DM Sans', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --ink: #151614;
+  --ink-soft: #20211e;
+  --paper: #f2eee6;
+  --paper-bright: #fffdfa;
+  --brass: #b78b55;
+  --brass-light: #d1ab75;
+  --brass-dark: #89673d;
+  --rust: #9a4d39;
+  --muted: #76736b;
+  --muted-on-dark: #a8a398;
+  --line: #ddd8cf;
+  --shadow: 0 18px 55px rgba(21,22,20,.1);
+}
