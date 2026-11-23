@@ -9,7 +9,7 @@ export function AuthPage({ mode = 'login' }) {
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [form, setForm] = useState({ name: '', email: '', whatsappPhone: '', whatsappOptIn: false, password: '', confirmPassword: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const nextPath = searchParams.get('next');
@@ -29,7 +29,7 @@ export function AuthPage({ mode = 'login' }) {
     setBusy(true);
     try {
       const user = isRegister
-        ? await register({ name: form.name, email: form.email, whatsappPhone: form.whatsappPhone, whatsappOptIn: form.whatsappOptIn, password: form.password })
+        ? await register({ name: form.name, email: form.email, password: form.password })
         : await login({ email: form.email, password: form.password });
       navigate(safeNextPath || (user.role === 'admin' ? '/admin' : isRegister ? '/agendar' : '/minha-conta'), { replace: true });
     } catch (requestError) {
@@ -50,8 +50,6 @@ export function AuthPage({ mode = 'login' }) {
         <form className="form-stack" onSubmit={submit}>
           {isRegister ? <label className="field"><span>Seu nome</span><input name="name" autoComplete="name" required minLength={2} maxLength={80} value={form.name} onChange={update} placeholder="Como podemos chamar você?" /></label> : null}
           <label className="field"><span>E-mail</span><input name="email" type="email" autoComplete="email" required maxLength={254} value={form.email} onChange={update} placeholder="voce@email.com" /></label>
-          {isRegister ? <label className="field"><span>WhatsApp <small>(opcional)</small></span><input name="whatsappPhone" type="tel" autoComplete="tel" maxLength={20} value={form.whatsappPhone} onChange={update} placeholder="(11) 99999-9999" /></label> : null}
-          {isRegister ? <label className="checkbox-field"><input name="whatsappOptIn" type="checkbox" checked={form.whatsappOptIn} onChange={(event) => setForm((current) => ({ ...current, whatsappOptIn: event.target.checked }))} /><span>Aceito receber lembretes dos meus agendamentos pelo WhatsApp da Brutus Cortes.</span></label> : null}
           <label className="field"><span>Senha</span><input name="password" type="password" autoComplete={isRegister ? 'new-password' : 'current-password'} required minLength={isRegister ? 8 : 1} maxLength={72} value={form.password} onChange={update} placeholder={isRegister ? 'Mínimo de 8 caracteres' : 'Sua senha'} /></label>
           {isRegister ? <label className="field"><span>Confirme sua senha</span><input name="confirmPassword" type="password" autoComplete="new-password" required minLength={8} maxLength={72} value={form.confirmPassword} onChange={update} placeholder="Digite a senha novamente" /></label> : null}
           <button className="button button--primary button--wide" type="submit" disabled={busy}>{busy ? 'Aguarde…' : isRegister ? 'Criar minha conta' : 'Entrar'} <ArrowRight size={16} /></button>

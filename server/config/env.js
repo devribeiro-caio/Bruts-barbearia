@@ -23,11 +23,5 @@ export const env = {
   jwtSecret: process.env.JWT_SECRET || 'local-only-change-this-development-secret-32chars',
   timezone,
   whatsappPhone: (process.env.WHATSAPP_PHONE || '').replace(/\D/g, ''),
-  whatsappAccessToken: process.env.WHATSAPP_ACCESS_TOKEN?.trim() || '',
-  whatsappPhoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID?.trim() || '',
-  whatsappApiVersion: process.env.WHATSAPP_API_VERSION?.trim() || 'v23.0',
-  whatsappTemplate24h: process.env.WHATSAPP_REMINDER_TEMPLATE_24H?.trim() || 'lembrete_agendamento_24h',
-  whatsappTemplate2h: process.env.WHATSAPP_REMINDER_TEMPLATE_2H?.trim() || 'lembrete_agendamento_2h',
-  whatsappTemplateLanguage: process.env.WHATSAPP_TEMPLATE_LANGUAGE?.trim() || 'pt_BR',
   cookieName: 'brutus_session',
 };

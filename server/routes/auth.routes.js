@@ -22,9 +22,6 @@ router.post('/register', authRateLimit, asyncHandler(async (req, res) => {
     user = await User.create({
       name: input.name,
       email,
-      whatsappPhone: input.whatsappPhone.replace(/\D/g, ''),
-      whatsappOptIn: input.whatsappOptIn,
-      whatsappOptInAt: input.whatsappOptIn ? new Date() : null,
       passwordHash: await bcrypt.hash(input.password, 12),
       role: 'customer',
     });
