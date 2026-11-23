@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock3, MessageCircle, Scis
 import { Link, useSearchParams } from 'react-router-dom';
 import { Alert, LoadingState } from '../components/Feedback.jsx';
 import { CalendarGrid } from '../components/CalendarGrid.jsx';
+import { PixPayment } from '../components/PixPayment.jsx';
 import { api } from '../lib/api.js';
 import { formatMoney } from '../lib/format.js';
 import { currentMonthKey, formatCalendarDate } from '../lib/calendar.js';
@@ -89,7 +90,7 @@ export function BookingPage({ user, whatsappPhone }) {
   }
 
   if (success) {
-    return <section className="page-container booking-page"><div className="booking-success"><span className="booking-success__icon"><Check size={26} /></span><p className="eyebrow">PEDIDO ENVIADO</p><h1>Seu horário está <em>pendente.</em></h1><p>O cabeleireiro precisa confirmar sua solicitação. Você poderá acompanhar o retorno na sua conta.</p><div className="booking-success__summary"><strong>{success.serviceName}</strong><span>{formatCalendarDate(selectedDate)} às {selectedTime}</span><span>{formatMoney(success.priceCents)}</span></div><div className="button-row"><Link className="button button--primary" to="/minha-conta">Acompanhar pedido <ArrowRight size={16} /></Link><button className="button button--outline" type="button" onClick={() => setSuccess(null)}>Novo agendamento</button></div></div></section>;
+    return <section className="page-container booking-page"><div className="booking-success"><span className="booking-success__icon"><Check size={26} /></span><p className="eyebrow">PEDIDO ENVIADO</p><h1>Seu horário está <em>pendente.</em></h1><p>O cabeleireiro precisa confirmar sua solicitação. Você poderá acompanhar o retorno na sua conta.</p><div className="booking-success__summary"><strong>{success.serviceName}</strong><span>{formatCalendarDate(selectedDate)} às {selectedTime}</span><span>{formatMoney(success.priceCents)}</span></div><PixPayment amountCents={success.priceCents} reference={success._id || 'BRUTUS01'} /><div className="button-row"><Link className="button button--primary" to="/minha-conta">Acompanhar pedido <ArrowRight size={16} /></Link><button className="button button--outline" type="button" onClick={() => setSuccess(null)}>Novo agendamento</button></div></div></section>;
   }
 
   return (
@@ -125,6 +126,7 @@ export function BookingPage({ user, whatsappPhone }) {
             <div className="booking-summary__line"><span>Data</span><strong>{selectedDate ? formatCalendarDate(selectedDate) : 'Selecione uma data'}</strong></div>
             <div className="booking-summary__line"><span>Horário</span><strong>{selectedTime || 'Selecione um horário'}</strong></div>
             <div className="booking-summary__total"><span>Valor do serviço</span><strong>{selectedService ? formatMoney(selectedService.priceCents) : '—'}</strong></div>
+            {selectedService ? <PixPayment amountCents={selectedService.priceCents} compact /> : null}
             <label className="field booking-summary__notes"><span>Observação <small>(opcional)</small></span><textarea value={customerNotes} onChange={(event) => setCustomerNotes(event.target.value)} maxLength={500} rows={3} placeholder="Tem algum detalhe para contar ao cabeleireiro?" /></label>
             <button className="button button--primary button--wide" type="submit" disabled={!selectedService || !selectedDate || !selectedTime}>Solicitar horário <ArrowRight size={16} /></button>
             <p className="booking-summary__note">O pedido fica pendente até o cabeleireiro confirmar.</p>

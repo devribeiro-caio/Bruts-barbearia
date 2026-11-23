@@ -202,6 +202,21 @@ main { flex: 1; }
 .booking-summary__notes textarea { min-height: 65px; }
 .booking-summary__note { margin: 11px 0 0; color: var(--muted); font-size: 9px; text-align: center; }
 .booking-summary__whatsapp { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 14px; color: #426954; font-size: 10px; font-weight: 700; }
+.pix-payment { margin: 20px 0; padding: 15px; border: 1px solid var(--line); background: #fffdfa; text-align: left; }
+.pix-payment--compact { margin: 16px 0; padding: 12px; }
+.pix-payment__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 13px; }
+.pix-payment__heading .eyebrow { gap: 6px; }
+.pix-payment__heading h3 { margin: 5px 0 0; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 500; }
+.pix-payment__heading > strong { color: var(--brass-dark); font-family: 'Oswald', sans-serif; font-size: 19px; font-weight: 500; }
+.pix-payment__content { display: flex; align-items: center; gap: 14px; }
+.pix-payment__qr { flex: 0 0 118px; width: 118px; height: 118px; padding: 4px; border: 1px solid var(--line); background: #fff; image-rendering: pixelated; }
+.pix-payment:not(.pix-payment--compact) .pix-payment__qr { flex-basis: 170px; width: 170px; height: 170px; }
+.pix-payment__qr--loading { display: grid; place-items: center; color: var(--muted); font-size: 9px; text-align: center; }
+.pix-payment__details { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pix-payment__details p { margin: 0; color: var(--muted); font-size: 10px; }
+.pix-payment__key { color: var(--ink); font-size: 10px; font-weight: 700; overflow-wrap: anywhere; }
+.pix-payment__copy { min-height: 36px; padding: 0 10px; font-size: 10px; }
+.pix-payment__details small { color: var(--muted); font-size: 8px; line-height: 1.4; }
 .booking-page__back { margin-top: 25px; }
 .booking-success { max-width: 590px; margin: 75px auto; padding: 38px; border: 1px solid var(--line); background: #fffdfa; text-align: center; }
 .booking-success__icon { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 auto 19px; border-radius: 50%; background: #e8efe8; color: #3c6948; }
@@ -306,6 +321,8 @@ main { flex: 1; }
   .calendar-day { min-height: 33px; font-size: 10px; }
   .calendar-legend { font-size: 8px; }
   .booking-summary { position: static; }
+  .pix-payment__content { align-items: flex-start; }
+  .pix-payment:not(.pix-payment--compact) .pix-payment__qr { flex-basis: 145px; width: 145px; height: 145px; }
   .booking-success { margin: 31px auto; padding: 27px 18px; }
   .booking-success h1 { font-size: 37px; }
   .appointment-card { grid-template-columns: 1fr auto; gap: 13px; padding: 15px; }
