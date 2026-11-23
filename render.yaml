@@ -21,4 +21,4 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: WHATSAPP_PHONE
-        sync: false
+        value: 5511934632232
