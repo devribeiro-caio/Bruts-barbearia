@@ -1,6 +1,7 @@
-import { ArrowUpRight, Menu, MessageCircle, Scissors, X } from 'lucide-react';
+import { ArrowUpRight, LogOut, Menu, MessageCircle, Scissors, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../lib/useAuth.js';
 
 function whatsAppUrl(phone) {
   if (!phone) return null;
@@ -9,8 +10,19 @@ function whatsAppUrl(phone) {
 
 export function SiteHeader({ user, whatsappPhone }) {
   const [open, setOpen] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const waUrl = whatsAppUrl(whatsappPhone);
   const close = () => setOpen(false);
+
+  async function handleLogout() {
+    close();
+    try {
+      await logout();
+    } finally {
+      navigate('/', { replace: true });
+    }
+  }
 
   return (
     <header className="site-header">
@@ -28,6 +40,7 @@ export function SiteHeader({ user, whatsappPhone }) {
           {user?.role === 'admin' ? <NavLink to="/admin" onClick={close}>Painel</NavLink> : null}
           {user && user.role === 'customer' ? <NavLink to="/minha-conta" onClick={close}>Minha conta</NavLink> : null}
           {!user ? <NavLink to="/entrar" onClick={close}>Entrar</NavLink> : null}
+          {user ? <button className="site-nav__logout" type="button" onClick={handleLogout}><LogOut size={14} /> Sair</button> : null}
           {waUrl ? <a className="site-nav__whatsapp" href={waUrl} target="_blank" rel="noreferrer">WhatsApp <ArrowUpRight size={14} /></a> : <span className="site-nav__whatsapp site-nav__whatsapp--muted"><MessageCircle size={14} /> WhatsApp</span>}
         </nav>
       </div>
